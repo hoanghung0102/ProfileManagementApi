@@ -13,12 +13,12 @@ import org.springframework.stereotype.Component;
 @Component
 public class ServiceMonitoring {
 
-    @Before("execution(* endpoint..*Controller.*(..))")
+    @Before("execution(* com.hoanghung..*endpoint.*(..))")
     public void logServiceAccessBefore(JoinPoint joinPoint) {
         System.out.println("Start: " + joinPoint);
     }
 
-    @AfterReturning("execution(* endpoint..*Controller.*(..))")
+    @AfterReturning("execution(* com.hoanghung..*endpoint.*(..))")
     public void logServiceAccessAfter(JoinPoint joinPoint) {
         System.out.println("Completed: " + joinPoint);
     }
