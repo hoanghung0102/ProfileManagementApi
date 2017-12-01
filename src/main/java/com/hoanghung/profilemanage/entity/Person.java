@@ -26,6 +26,8 @@ public class Person {
     @Column(name = "pcity")
     private String city;
 
+    private String address;
+
     public String toString() {
         return "Person [pid=" + id + ", pName=" + name + ", pCity=" + city + "]";
     }
