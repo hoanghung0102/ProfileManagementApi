@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 /**
  * Created by hxhung on 8/24/2017.
  */
@@ -25,5 +27,10 @@ public class PersonController {
         Person person = personService.getPersonById(id);
 
         return ResponseEntity.ok(person);
+    }
+
+    @GetMapping("/person/all")
+    public ResponseEntity<List<Person>> getPerson() {
+        return ResponseEntity.ok(personService.getAllPerson());
     }
 }

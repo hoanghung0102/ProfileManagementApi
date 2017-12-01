@@ -6,6 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Transactional
 @Service
 public class PersonServiceImpl implements PersonService {
@@ -16,5 +18,10 @@ public class PersonServiceImpl implements PersonService {
     @Override
     public Person getPersonById(Long id) {
         return personRepository.findOne(id);
+    }
+
+    @Override
+    public List<Person> getAllPerson() {
+        return (List<Person>) personRepository.findAll();
     }
 }
