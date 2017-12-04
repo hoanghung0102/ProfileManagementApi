@@ -24,4 +24,9 @@ public class PersonServiceImpl implements PersonService {
     public List<Person> getAllPerson() {
         return (List<Person>) personRepository.findAll();
     }
+
+    @Override
+    public void detelePersonById(Long id) {
+        personRepository.delete(id);
+    }
 }

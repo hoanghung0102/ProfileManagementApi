@@ -5,6 +5,7 @@ import com.hoanghung.profilemanage.service.PersonService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -25,14 +26,16 @@ public class PersonController {
 
     @GetMapping("/person")
     public ResponseEntity<Person> getPerson(@RequestParam(value = "id", required = false) Long id) {
-
-        Person person = personService.getPersonById(id);
-
-        return ResponseEntity.ok(person);
+        return ResponseEntity.ok(personService.getPersonById(id));
     }
 
     @GetMapping("/person/all")
     public ResponseEntity<List<Person>> getPerson() {
         return ResponseEntity.ok(personService.getAllPerson());
+    }
+
+    @DeleteMapping("/person/delete")
+    public void deletePersonById(@RequestParam(value = "id") Long id) {
+        personService.detelePersonById(id);
     }
 }

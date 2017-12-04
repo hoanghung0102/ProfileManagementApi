@@ -9,4 +9,5 @@ import java.util.List;
 public interface PersonService {
     Person getPersonById(Long id);
     List<Person> getAllPerson();
+    void detelePersonById(Long id);
 }
