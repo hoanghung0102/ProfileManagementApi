@@ -28,6 +28,8 @@ public class Person {
 
     private String address;
 
+    private boolean sex;
+
     public String toString() {
         return "Person [pid=" + id + ", pName=" + name + ", pCity=" + city + "]";
     }
