@@ -10,4 +10,5 @@ public interface PersonService {
     Person getPersonById(Long id);
     List<Person> getAllPerson();
     void detelePersonById(Long id);
+    void addNewPerson(Person person);
 }
