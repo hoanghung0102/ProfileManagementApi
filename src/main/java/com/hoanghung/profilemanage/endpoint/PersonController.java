@@ -1,7 +1,9 @@
 package com.hoanghung.profilemanage.endpoint;
 
 import com.hoanghung.profilemanage.entity.Person;
+import com.hoanghung.profilemanage.entity.User;
 import com.hoanghung.profilemanage.service.PersonService;
+import com.hoanghung.profilemanage.service.UserServiceImplement;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -26,6 +28,14 @@ public class PersonController {
 
     @Autowired
     private PersonService personService;
+
+    @Autowired
+    private UserServiceImplement userService;
+
+    @PostMapping("/login")
+    public ResponseEntity<User> getPerson(@RequestBody User user) {
+        return ResponseEntity.ok(userService.getUserByUserNameAndPwd(user));
+    }
 
     @GetMapping("/person")
     public ResponseEntity<Person> getPerson(@RequestParam(value = "id", required = false) Long id) {
