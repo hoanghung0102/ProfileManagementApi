@@ -1,1 +1,2 @@
-INSERT INTO public."users" (id, user_name, pwd, gender, address, city) VALUES (1, 'hoanghung', '123456!A', true, '145 The Lu, An Hai Bac, Son Tra, Da Nang', 'Da Nang');
+INSERT INTO public.users (id, address, city, gender, pwd, user_name) VALUES (1, '145 The Lu, An Hai Bac, Son Tra, Da Nang', 'Da Nang', true, '123456!A', 'hoanghung');
+INSERT INTO public.users (id, address, city, gender, pwd, user_name) VALUES (2, '135 The Lu, An Hai Bac, Son Tra, Da Nang', 'Da Nang', true, '123456', 'admin');

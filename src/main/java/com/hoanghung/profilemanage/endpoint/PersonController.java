@@ -21,7 +21,8 @@ import java.util.List;
 /**
  * Created by hxhung on 8/24/2017.
  */
-@CrossOrigin
+@CrossOrigin(origins = "http://localhost:8089", maxAge = 3600,
+        allowedHeaders = {"Content-Type", "Access-Control-Allow-Origin", "Access-Control-Allow-Headers"})
 @RestController
 @RequestMapping("/profile-management")
 public class PersonController {
