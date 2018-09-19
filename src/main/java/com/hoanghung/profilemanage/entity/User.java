@@ -1,6 +1,7 @@
 package com.hoanghung.profilemanage.entity;
 
 import lombok.Data;
+import org.springframework.security.core.GrantedAuthority;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;

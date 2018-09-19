@@ -12,7 +12,7 @@ public abstract class BaseController {
         return getAuthentication().getName();
     }
 
-    private Authentication getAuthentication() {
+    public Authentication getAuthentication() {
         return SecurityContextHolder.getContext().getAuthentication();
     }
 }

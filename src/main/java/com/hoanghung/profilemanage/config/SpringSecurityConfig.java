@@ -4,11 +4,11 @@ import com.hoanghung.profilemanage.service.UserDetailServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
@@ -27,8 +27,8 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
     UserDetailServiceImpl userDetailsService;
 
     // Authentication : User --> Roles
-    @Autowired
-    public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
+    @Override
+    public void configure(AuthenticationManagerBuilder auth) throws Exception {
         // setting service to find user in DB
         auth.userDetailsService(userDetailsService);
     }
@@ -37,14 +37,28 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity httpSecure) throws Exception {
         httpSecure
-                .csrf().disable().cors()
-                .and()
-                .authorizeRequests()
-                    .antMatchers(HttpMethod.POST, "/profile-management/login/").permitAll()
-                    .antMatchers("/profile-management/person/all").permitAll()
-                    .antMatchers("/profile-management/person/").hasAuthority("ADMIN")
+                .cors()
                     .and()
-                    .exceptionHandling().accessDeniedHandler(accessDeniedHandler()); // disable for customize error page auto to HTTP 403
+                .csrf()
+                    .disable()
+                .headers()
+                    .frameOptions().sameOrigin()
+                    .and()
+                .exceptionHandling()
+                    .accessDeniedHandler(accessDeniedHandler())
+                    .and()
+                .sessionManagement()
+                    .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                    .and()
+                .authorizeRequests()
+                    .antMatchers("profile-management/login/")
+                        .permitAll()
+                    .antMatchers("profile-management/person/all")
+                        .permitAll()
+                    .antMatchers("profile-management/person/")
+                        .hasRole("ADMIN")
+                    .anyRequest()
+                        .authenticated(); // disable for customize error page auto to HTTP 403
     }
 
     @Bean

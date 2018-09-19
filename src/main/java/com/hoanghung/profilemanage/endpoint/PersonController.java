@@ -5,6 +5,7 @@ import com.hoanghung.profilemanage.entity.User;
 import com.hoanghung.profilemanage.service.PersonService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -28,7 +29,17 @@ public class PersonController extends BaseController {
 
     @PostMapping("/login")
     public ResponseEntity<User> getPerson(@RequestBody User user) {
-        System.out.println("User name: " + getUsername());
+        Object principal = getAuthentication().getPrincipal();
+        String username;
+
+        if (principal instanceof UserDetails) {
+            username = ((UserDetails) principal).getUsername();
+        } else {
+            username = principal.toString();
+        }
+
+        System.out.println("Username: " + username);
+
         return ResponseEntity.ok(user);
     }
 
