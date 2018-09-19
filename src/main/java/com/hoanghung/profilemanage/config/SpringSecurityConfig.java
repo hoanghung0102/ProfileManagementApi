@@ -1,10 +1,20 @@
 package com.hoanghung.profilemanage.config;
 
+import com.hoanghung.profilemanage.service.UserDetailServiceImpl;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.web.access.AccessDeniedHandler;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+
+import static java.util.Arrays.asList;
 
 /**
  * Created by hxhung on 8/24/2017.
@@ -13,20 +23,49 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 @EnableWebSecurity
 public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
 
+    @Autowired
+    UserDetailServiceImpl userDetailsService;
+
     // Authentication : User --> Roles
-    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.inMemoryAuthentication()
-                .withUser("hoanghung").password("123456!A").roles("USER")
-                .and()
-                .withUser("admin").password("123456!A").roles("USER", "ADMIN");
+    @Autowired
+    public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
+        // setting service to find user in DB
+        auth.userDetailsService(userDetailsService);
     }
 
     // Authorization: Role --> Access
-    protected void configure(HttpSecurity httpSercury) throws Exception {
-        httpSercury.httpBasic().and().authorizeRequests()
-                .antMatchers("/profile-management/**").hasRole("USER")
-                .antMatchers("/**").hasRole("ADMIN")
+    @Override
+    protected void configure(HttpSecurity httpSecure) throws Exception {
+        httpSecure
+                .csrf().disable().cors()
                 .and()
-                .csrf().disable().headers().frameOptions().disable(); // disable for customize error page auto to HTTP 403
+                .authorizeRequests()
+                    .antMatchers(HttpMethod.POST, "/profile-management/login/").permitAll()
+                    .antMatchers("/profile-management/person/all").permitAll()
+                    .antMatchers("/profile-management/person/").hasAuthority("ADMIN")
+                    .and()
+                    .exceptionHandling().accessDeniedHandler(accessDeniedHandler()); // disable for customize error page auto to HTTP 403
+    }
+
+    @Bean
+    public AccessDeniedHandler accessDeniedHandler(){
+        return new CustomAccessDeniedHandler();
+    }
+
+    @Bean
+    public CorsConfigurationSource corsConfigurationSource() {
+        final CorsConfiguration configuration = new CorsConfiguration();
+        configuration.setAllowedOrigins(asList("*"));
+        configuration.setAllowedMethods(asList("HEAD", "GET", "POST", "PUT", "DELETE", "PATCH"));
+        // setAllowCredentials(true) is important, otherwise:
+        // The value of the 'Access-Control-Allow-Origin' header in the response must not be the wildcard '*' when the request's credentials mode is 'include'.
+        configuration.setAllowCredentials(true);
+        // setAllowedHeaders is important! Without it, OPTIONS preflight request
+        // will fail with 403 Invalid CORS request
+        configuration.setAllowedHeaders(asList("Authorization", "Cache-Control", "Content-Type"));
+        final UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", configuration);
+
+        return source;
     }
 }

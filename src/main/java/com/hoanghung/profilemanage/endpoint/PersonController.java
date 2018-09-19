@@ -3,10 +3,8 @@ package com.hoanghung.profilemanage.endpoint;
 import com.hoanghung.profilemanage.entity.Person;
 import com.hoanghung.profilemanage.entity.User;
 import com.hoanghung.profilemanage.service.PersonService;
-import com.hoanghung.profilemanage.service.UserServiceImplement;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -21,21 +19,17 @@ import java.util.List;
 /**
  * Created by hxhung on 8/24/2017.
  */
-@CrossOrigin(origins = "http://localhost:8089", maxAge = 3600,
-        allowedHeaders = {"Content-Type", "Access-Control-Allow-Origin", "Access-Control-Allow-Headers"})
 @RestController
 @RequestMapping("/profile-management")
-public class PersonController {
+public class PersonController extends BaseController {
 
     @Autowired
     private PersonService personService;
 
-    @Autowired
-    private UserServiceImplement userService;
-
     @PostMapping("/login")
     public ResponseEntity<User> getPerson(@RequestBody User user) {
-        return ResponseEntity.ok(userService.getUserByUserNameAndPwd(user));
+        System.out.println("User name: " + getUsername());
+        return ResponseEntity.ok(user);
     }
 
     @GetMapping("/person")
