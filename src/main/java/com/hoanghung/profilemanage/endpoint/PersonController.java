@@ -6,6 +6,8 @@ import com.hoanghung.profilemanage.service.PersonService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -22,25 +24,20 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("/profile-management")
+@CrossOrigin()
 public class PersonController extends BaseController {
 
     @Autowired
     private PersonService personService;
 
+    @Autowired
+    private UserDetailsService userService;
+
     @PostMapping("/login")
-    public ResponseEntity<User> getPerson(@RequestBody User user) {
-        Object principal = getAuthentication().getPrincipal();
-        String username;
+    public ResponseEntity<UserDetails> getPerson(@RequestBody User user) {
+        UserDetails uds = userService.loadUserByUsername(user.getUsername());
 
-        if (principal instanceof UserDetails) {
-            username = ((UserDetails) principal).getUsername();
-        } else {
-            username = principal.toString();
-        }
-
-        System.out.println("Username: " + username);
-
-        return ResponseEntity.ok(user);
+        return ResponseEntity.ok(uds);
     }
 
     @GetMapping("/person")

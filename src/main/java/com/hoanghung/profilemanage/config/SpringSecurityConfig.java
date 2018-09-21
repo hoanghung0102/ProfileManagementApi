@@ -4,8 +4,10 @@ import com.hoanghung.profilemanage.service.UserDetailServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -52,18 +54,21 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
                     .and()
                 .authorizeRequests()
                     .antMatchers("profile-management/login/")
-                        .permitAll()
+                        .hasAnyRole("USER", "ADMIN")
                     .antMatchers("profile-management/person/all")
                         .permitAll()
                     .antMatchers("profile-management/person/")
-                        .hasRole("ADMIN")
-                    .anyRequest()
-                        .authenticated(); // disable for customize error page auto to HTTP 403
+                        .hasRole("ADMIN"); // disable for customize error page auto to HTTP 403
     }
 
     @Bean
     public AccessDeniedHandler accessDeniedHandler(){
         return new CustomAccessDeniedHandler();
+    }
+
+    @Override
+    public void configure(WebSecurity web) {
+        web.ignoring().antMatchers(HttpMethod.OPTIONS, "/**");
     }
 
     @Bean
