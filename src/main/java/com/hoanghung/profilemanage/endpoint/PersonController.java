@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -34,10 +35,13 @@ public class PersonController extends BaseController {
     private UserDetailsService userService;
 
     @PostMapping("/login")
-    public ResponseEntity<UserDetails> getPerson(@RequestBody User user) {
-        UserDetails uds = userService.loadUserByUsername(user.getUsername());
-
-        return ResponseEntity.ok(uds);
+    public ResponseEntity<Object> getPerson(@RequestBody User user) {
+        try {
+            UserDetails usd = userService.loadUserByUsername(user.getUsername());
+            return ResponseEntity.ok(usd);
+        } catch (UsernameNotFoundException ex) {
+            return ResponseEntity.ok(ex.getMessage());
+        }
     }
 
     @GetMapping("/person")
