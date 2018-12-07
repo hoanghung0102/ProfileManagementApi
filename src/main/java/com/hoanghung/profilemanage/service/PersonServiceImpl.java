@@ -1,5 +1,6 @@
 package com.hoanghung.profilemanage.service;
 
+import com.hoanghung.profilemanage.custom.anotation.TrackTime;
 import com.hoanghung.profilemanage.entity.Person;
 import com.hoanghung.profilemanage.repository.PersonRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +29,7 @@ public class PersonServiceImpl implements PersonService {
         return personRepository.findOne(id);
     }
 
+    // @TrackTime
     @Override
     public List<Person> getAllPerson() {
         return (List<Person>) personRepository.findAll();
@@ -38,6 +40,7 @@ public class PersonServiceImpl implements PersonService {
         personRepository.delete(id);
     }
 
+    @TrackTime
     @Override
     public void addNewPerson(Person person) {
         personRepository.save(person);
