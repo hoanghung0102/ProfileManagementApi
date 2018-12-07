@@ -1,29 +1,27 @@
 package com.hoanghung.profilemanage.service;
 
 import com.hoanghung.profilemanage.entity.Person;
-import com.hoanghung.profilemanage.repository.PersonRepository;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.Mockito;
-import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
-import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 @RunWith(SpringRunner.class)
-@JdbcTest
-@AutoConfigureTestDatabase(replace= AutoConfigureTestDatabase.Replace.ANY)
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class PersonServiceTest {
 
-    private PersonRepository personRepository;
+    // private PersonRepository personRepository;
+
+    @Autowired
     private PersonService personService;
 
     @Before
     public void setUp() {
-        personRepository = Mockito.mock(PersonRepository.class);
-        personService = new PersonServiceImpl();
+        // personRepository = Mockito.mock(PersonRepository.class);
     }
 
     @Test
